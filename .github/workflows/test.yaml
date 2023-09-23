@@ -1,0 +1,23 @@
+on:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: archlinux:latest
+      options: --privileged
+      volumes:
+        - /dev:/dev
+    steps:
+      - run: |
+          pacman -Syu --noconfirm gdisk
+          truncate -s1G foo.img
+          loop="$(losetup --find --show --partscan foo.img)"
+          sgdisk --clear \
+            --new 1::-0 --typecode=1:8300 \
+            "${loop}"
+          mkfs.ext4 "${loop}"
+          lsblk
+          blkid
+          mount "${loop}" /mnt
