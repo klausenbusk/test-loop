@@ -21,3 +21,5 @@ jobs:
           lsblk
           blkid
           mount "${loop}" /mnt
+      - name: Setup upterm session
+        uses: lhotari/action-upterm@v1
